@@ -33,6 +33,9 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
+  http: ^0.13.5
+  url_launcher: ^6.1.5
+  shared_preferences: ^2.0.15
 
 dev_dependencies:
   flutter_test:
@@ -59,11 +62,17 @@ flutter:
   assets:
     #images
     - ./assets/images/chicken.png
+    - ./assets/images/desc_chicken.jpg
     - ./assets/images/food.png
-    - ./assets/images/rice.png
-    - ./assets/images/shawama.png
-    - ./assets/images/247chops.png
-    - ./assets/images/details_food.png
+    - ./assets/images/rice.jpg
+    - ./assets/images/desc_rice.jpg
+    - ./assets/images/shawarma_desc.jpg
+    - ./assets/images/shawarma.jpg
+    - ./assets/images/chops.png
+    - ./assets/images/chops_desc.jpg
+    - ./assets/images/desc_ponmo.jpg
+    - ./assets/images/ponmo.png
+
     # icons
     - ./assets/icons/back_icon.png
     - ./assets/icons/cart_icon.png
@@ -75,6 +84,9 @@ flutter:
     - ./assets/icons/red_heart.png
     - ./assets/icons/active_icon.png
     - ./assets/icons/hambuger_icon.png
+    - ./assets/icons/twitter_icons.png
+    - ./assets/icons/facebook_icons.png
+    - ./assets/icons/instagram_icons.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
