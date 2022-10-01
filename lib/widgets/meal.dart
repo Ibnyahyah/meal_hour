@@ -27,7 +27,7 @@ class MealItem extends StatelessWidget {
       : super(key: key);
 
   void selectedMeal(BuildContext context) {
-    Navigator.of(context).pushNamed('./meal_details', arguments: id).then(
+    Navigator.of(context).pushNamed('/meal_details', arguments: id).then(
       (result) {
         // print('result');
       },
@@ -39,7 +39,6 @@ class MealItem extends StatelessWidget {
     return GestureDetector(
       onTap: () => {selectedMeal(context)},
       child: Container(
-        // width: 165,
         padding: const EdgeInsets.symmetric(
           vertical: 5.00,
           horizontal: 7.00,
@@ -52,6 +51,7 @@ class MealItem extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
         ),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -72,7 +72,7 @@ class MealItem extends StatelessWidget {
             ),
             Container(
               width: 100,
-              height: MediaQuery.of(context).size.height * .13,
+              height: 100,
               decoration: BoxDecoration(
                 color: Colors.grey.shade300,
                 shape: BoxShape.circle,

@@ -1,0 +1,24 @@
+icons_launcher:
+  image_path: 'assets/food.png'
+  platforms:
+    android:
+      enable: true
+      image_path: 'assets/food.png'
+      # adaptive_background_color: '#ffffff'
+      adaptive_round_image: 'assets/food.png'
+    ios:
+      enable: true
+      image_path: 'assets/food.png'
+    web:
+      enable: true
+      image_path: 'assets/food.png'
+      favicon_path: 'assets/food.png'
+    macos:
+      enable: false
+      image_path: 'assets/food.png'
+    windows:
+      enable: false
+      image_path: 'assets/food.png'
+    linux:
+      enable: false
+      image_path: 'assets/food.png'

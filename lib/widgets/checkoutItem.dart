@@ -5,14 +5,15 @@ class CheckOutItem extends StatelessWidget {
   final String title;
   final String imageUrl;
   final double price;
+  final num qty;
   final Function toggleCart;
   const CheckOutItem(
-      this.id, this.title, this.imageUrl, this.price, this.toggleCart,
+      this.id, this.title, this.imageUrl, this.price, this.qty, this.toggleCart,
       {Key? key})
       : super(key: key);
 
   void selectedMeal(BuildContext context) {
-    Navigator.of(context).pushNamed('./meal_details', arguments: id);
+    Navigator.of(context).pushNamed('/meal_details', arguments: id);
   }
 
   @override
@@ -46,6 +47,7 @@ class CheckOutItem extends StatelessWidget {
                   margin: const EdgeInsets.only(left: 10.00, top: 5.00),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Text(
                         title,
@@ -54,7 +56,7 @@ class CheckOutItem extends StatelessWidget {
                           fontSize: 20,
                         ),
                       ),
-                      Text('₦ ${price}K'),
+                      Text('₦ ${price * qty}K'),
                     ],
                   ),
                 ),
@@ -67,7 +69,7 @@ class CheckOutItem extends StatelessWidget {
                   toggleCart(id);
                 },
                 icon: Icon(
-                  Icons.delete_forever,
+                  Icons.cancel,
                   color: Colors.red[400],
                 ),
               ),

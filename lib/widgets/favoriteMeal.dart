@@ -11,7 +11,7 @@ class FavoriteMeal extends StatelessWidget {
   final Function toggleFavorite;
 
   void selectMeal(BuildContext context) {
-    Navigator.of(context).pushNamed('./meal_details', arguments: data.id);
+    Navigator.of(context).pushNamed('/meal_details', arguments: data.id);
   }
 
   @override

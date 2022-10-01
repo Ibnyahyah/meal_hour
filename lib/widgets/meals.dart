@@ -17,11 +17,11 @@ class MyMeals extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GridView(
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: MediaQuery.of(context).size.width > 600 ? 3 : 2,
         crossAxisSpacing: 20,
         mainAxisSpacing: 20,
-        childAspectRatio: .932,
+        childAspectRatio: 2 / 2.4,
       ),
       children: [
         ...meals_data

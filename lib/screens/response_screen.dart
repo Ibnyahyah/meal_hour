@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ResponseScreen extends StatelessWidget {
-  static const routeName = './response_screen';
+  static const routeName = '/response_screen';
   const ResponseScreen({Key? key}) : super(key: key);
 
   @override

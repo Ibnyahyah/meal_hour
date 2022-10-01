@@ -31,20 +31,19 @@ class SplashScreen extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(
                 horizontal: 80.00,
+                vertical: 4.00,
               ),
               margin: const EdgeInsets.only(top: 50.00),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(30.00),
                 color: Colors.white,
               ),
-              child: FlatButton(
+              child: TextButton(
                 onPressed: () {
-                  Navigator.of(context).pushReplacementNamed('./home_screen');
+                  Navigator.of(context).pushReplacementNamed('/home_screen');
                 },
-                color: Colors.white,
-                height: 50.00,
                 child: const Text(
-                  'Get a Meal',
+                  'Get a Chop',
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 16.00,

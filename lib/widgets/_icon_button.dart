@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class MyIconButton extends StatelessWidget {
-  final image;
+  final String image;
   Color color;
   final Function navigator;
-  final route;
+  final String route;
   final availableItem;
 
   MyIconButton(

@@ -1,12 +1,16 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+// import 'package:flutter_paystack_client/flutter_paystack_client.dart';
+
+import 'package:meal_hour/test.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 import './dummy_data.dart';
 import './models/meal.dart';
+import './models/user_order_checkout.dart';
 
 import './screens/splash_screen.dart';
 import './screens/home_screen.dart';
@@ -20,10 +24,13 @@ import './screens/order_history.dart';
 import './screens/about_screen.dart';
 import './screens/search_screen.dart';
 import '../screens/404_screen.dart';
-import './test.dart';
 
-void main() {
-  runApp(const MyApp());
+Future<void> main() async {
+  // WidgetsFlutterBinding.ensureInitialized();
+  // await PaystackClient.initialize(
+  //     'pk_test_65b833b39eb2a25a6a0e3a818b71ef147d760f4e');
+
+  runApp(MyApp());
 }
 
 class MyApp extends StatefulWidget {
@@ -34,6 +41,12 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  late Future<String> _mail;
+  late BuildContext mContext;
+
+  String _email = '';
+
   double cartedAmount = 0;
   double cartedQauntity = 1;
   final List<Meal> _cartedMeals = [];
@@ -46,37 +59,50 @@ class _MyAppState extends State<MyApp> {
   late String imageUrl;
 
   bool isLoading = false;
-  bool isSucessful = false;
-  // void _increamentButton() {
-  //   setState(() {
-  //     cartedQauntity += 1;
-  //   });
-  // }
+  bool isSuccessful = false;
 
-  void _decreamentButton() {
-    if (cartedQauntity > 1) {
-      setState(() {
-        cartedQauntity -= 1;
-      });
-    }
+  @override
+  void initState() {
+    getMail();
+    super.initState();
   }
 
-  void _increamentButton(id) {
+  Future<void> getMail() async {
+    final SharedPreferences prefs = await _prefs;
+    final String userEmail = (prefs.getString('userEmail') ?? '');
     setState(() {
-      cartedQauntity += 1;
-      meals_data.map(
-        (meal) => {
-          // if (meal.id == id) {print(meal.qauntity += 1)} else {print("id")}
-        },
-      );
-      // print(cartedQauntity);
+      _email = userEmail;
+    });
+  }
+
+  void _decrementButton(id) {
+    setState(() {
+      meals_data.map((meal) {
+        if (meal.id == id && meal.qauntity > 1) {
+          meal.qauntity -= 1;
+        } else {
+          return meal;
+        }
+      }).toList();
+    });
+  }
+
+  void _incrementButton(id) {
+    setState(() {
+      meals_data.map((meal) {
+        if (meal.id == id) {
+          meal.qauntity += 1;
+        } else {
+          return meal;
+        }
+      }).toList();
     });
   }
 
   double cartedMealPriceCalculator(index) {
     double loppedPrice = 0;
     for (index = 0; index < _cartedMeals.length; index++) {
-      loppedPrice += _cartedMeals[index].price;
+      loppedPrice += _cartedMeals[index].price * _cartedMeals[index].qauntity;
     }
     return cartedAmount = loppedPrice;
   }
@@ -87,6 +113,7 @@ class _MyAppState extends State<MyApp> {
     if (existingIndex >= 0) {
       setState(() {
         cartedAmount -= _cartedMeals[existingIndex].price;
+        _cartedMeals[existingIndex].qauntity = 1;
         _cartedMeals.removeAt(existingIndex);
       });
     } else {
@@ -121,7 +148,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   gettingCheckOutMeal() {
-    return _cartedMeals.map((meal) => {
+    return _cartedMeals.forEach((meal) => {
           id = '${meal.id}',
           title = meal.title,
           qauntity = '${meal.qauntity}',
@@ -130,74 +157,80 @@ class _MyAppState extends State<MyApp> {
         });
   }
 
-  Future<void> submitCheckOutHistory(email) async {
-    var url = Uri.https('wedo-diary-default-rtdb.firebaseio.com',
-        '/ordered-history/$email.json', {'q': '{http}'});
-    var response = await http.post(
-      url,
-      body: json.encode(
-        <String, String>{
-          'id': id,
-          'title': title,
-          'qauntity': qauntity,
-          'price': price,
-          'imageUrl': imageUrl,
-        },
+  void _showToast(String message, context) {
+    final scaffold = ScaffoldMessenger.of(context);
+    scaffold.showSnackBar(
+      SnackBar(
+        content: Text(message),
+        action: SnackBarAction(
+          label: 'CLOSE',
+          onPressed: scaffold.hideCurrentSnackBar,
+        ),
       ),
     );
-    if (response.statusCode == 200) {
-      print('Response Okay id = $id .');
-      setState(() {
-        isLoading = false;
-        isSucessful = true;
-      });
-    } else {
-      print('Something went wrong ${response.statusCode}');
-      setState(() {
-        isLoading = false;
-      });
-    }
   }
 
   Future<void> submitHandler(
-      userState,
-      String customerAddress,
-      String customerName,
-      String customerPhone,
-      String customerEmail,
-      List orderItems,
-      String orderStatus,
-      String orderTotal) async {
-    final orderSchema = {
-      customerAddress,
-      customerName,
-      customerPhone,
-      customerEmail,
-      orderStatus,
-      orderTotal,
-      orderItems,
-    };
-
-    print(userState);
-    // setState(() {
-    //   isLoading = true;
-    // });
-    // var url = Uri.https('wedo-diary-default-rtdb.firebaseio.com', '/chops.json',
-    //     {'q': '{http}'});
-    // var response = await http.post(
-    //   url,
-    //   body: orderSchema,
-    // );
-    // if (response.statusCode == 200) {
-    //   // var name = convert.jsonDecode(response.body) as Map<String, dynamic>;
-    //   print('Response OK: ${response.body}');
-    //   // await submitCheckOutHistory(customerEmail);
-    // } else {
-    //   print('Something went wrong: ${response.statusCode}');
-    //   setState(() {
-    //     isLoading = false;
-    //   });
-    // }
+    String customerAddress,
+    String customerName,
+    String customerPhone,
+    String customerEmail,
+    List orderItems,
+    String orderStatus,
+    num orderTotal,
+    ctx,
+  ) async {
+    await gettingCheckOutMeal();
+    if (customerAddress.isEmpty ||
+        customerEmail.isEmpty ||
+        customerPhone.isEmpty ||
+        customerName.isEmpty ||
+        orderItems.length < 1) return;
+    var data = Order(
+      customerName: customerName,
+      customerEmail: customerEmail,
+      customerPhone: customerPhone,
+      customerAddress: customerAddress,
+      orderItems: [
+        OrderItem(
+          id: id,
+          title: title,
+          qauntity: qauntity,
+          price: price,
+          imageUrl: imageUrl,
+        )
+      ],
+      orderStatus: "pending",
+      orderTotal: orderTotal,
+    );
+    setState(() {
+      isLoading = true;
+    });
+    var url = Uri.https('dead-rose-elk-wig.cyclic.app', '/order');
+    var response = await http.post(url, body: json.encode(data), headers: {
+      'Content-Type': 'application/json',
+    });
+    if (response.statusCode == 201) {
+      final SharedPreferences prefs = await _prefs;
+      final String userEmail = prefs.getString('userEmail') ?? "";
+      _showToast('Order created successfully', ctx);
+      setState(() {
+        _mail =
+            prefs.setString('userEmail', customerEmail).then((bool success) {
+          return userEmail;
+        });
+        _cartedMeals.clear();
+      });
+      getMail();
+    } else {
+      setState(() {
+        isLoading = false;
+      });
+      _showToast('Something went wrong: ${response.statusCode}', ctx);
+    }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -219,26 +252,39 @@ class _MyAppState extends State<MyApp> {
               _favoriteMeals,
             ),
         MealDetailsScreen.routeName: (ctx) => MealDetailsScreen(
-            _toggleCart, _isMealCarted, _toggleFavorite, _isMealFavorite),
+              _toggleCart,
+              _isMealCarted,
+              _toggleFavorite,
+              _isMealFavorite,
+            ),
         CartsScreen.routeName: (ctx) => CartsScreen(
               _cartedMeals,
-              _increamentButton,
-              _decreamentButton,
+              _incrementButton,
+              _decrementButton,
             ),
         CheckOutScreen.routeName: (ctx) => CheckOutScreen(
-            _cartedMeals, _toggleCart, cartedAmount, cartedQauntity),
-        UserDetailsScreen.routeName: (ctx) =>
-            UserDetailsScreen(cartedAmount, isLoading),
+              _cartedMeals,
+              _toggleCart,
+              cartedAmount,
+              cartedQauntity,
+            ),
+        UserDetailsScreen.routeName: (ctx) => UserDetailsScreen(
+              submitHandler,
+              cartedAmount,
+              isLoading,
+              _cartedMeals,
+              gettingCheckOutMeal,
+            ),
         ResponseScreen.routeName: (ctx) => const ResponseScreen(),
         FavoriteMealScreen.routeName: (ctx) => FavoriteMealScreen(
               _toggleFavorite,
               _isMealFavorite,
               _favoriteMeals,
             ),
-        OrderHistory.routeName: (ctx) => OrderHistory(),
+        OrderHistory.routeName: (ctx) => OrderHistory(_email),
         AboutScreen.routeName: (ctx) => const AboutScreen(),
         SearchScreen.routeName: (ctx) => const SearchScreen(),
-        MyPost.routeName: (ctx) => MyPost(),
+        // '/test': (ctx) => TestScreen(),
       },
       onUnknownRoute: (settings) {
         return MaterialPageRoute(

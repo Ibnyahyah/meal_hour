@@ -9,7 +9,7 @@ class HomeButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () {
-        Navigator.of(context).pop('./home_screen');
+        Navigator.of(context).pop('/home_screen');
       },
       child: const Text('Back'),
     );

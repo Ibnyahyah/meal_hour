@@ -1,87 +1,96 @@
-import 'dart:async';
-import 'dart:convert';
+// import 'package:flutter/cupertino.dart';
+// import 'package:flutter/material.dart';
+// import 'package:flutter_paystack_client/flutter_paystack_client.dart';
 
-import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import './test_model.dart';
+// const String appName = 'Paystack Example';
 
-Future<List<Post>> fetchPost() async {
-  final response =
-      await http.get(Uri.parse('https://jsonplaceholder.typicode.com/posts'));
+// class TestScreen extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       title: appName,
+//       home: HomePage(),
+//     );
+//   }
+// }
 
-  if (response.statusCode == 200) {
-    final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
+// class HomePage extends StatefulWidget {
+//   @override
+//   _HomePageState createState() => _HomePageState();
+// }
 
-    return parsed.map<Post>((json) => Post.fromMap(json)).toList();
-  } else {
-    throw Exception('Failed to load album');
-  }
-}
+// class _HomePageState extends State<HomePage> {
+//   String _email = '';
+//   int _amount = 0;
+//   String _message = '';
 
-class MyPost extends StatefulWidget {
-  static const routeName = './test_screen';
-  @override
-  _MyPostState createState() => _MyPostState();
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text('Flutter Paystack Client Test'),
+//       ),
+//       body: Padding(
+//         padding: EdgeInsets.symmetric(
+//           horizontal: MediaQuery.of(context).size.width / 8,
+//         ),
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: [
+//             Text(
+//               _message,
+//               style: TextStyle(
+//                 fontWeight: FontWeight.w600,
+//                 color: Colors.deepPurple,
+//               ),
+//             ),
+//             const SizedBox(height: 10),
+//             TextField(
+//               decoration: InputDecoration(
+//                 labelText: 'Email',
+//               ),
+//               keyboardType: TextInputType.emailAddress,
+//               onChanged: (val) {
+//                 _email = val;
+//               },
+//             ),
+//             TextField(
+//               decoration: InputDecoration(
+//                 labelText: 'Amount',
+//               ),
+//               keyboardType: TextInputType.number,
+//               onChanged: (val) {
+//                 try {
+//                   _amount = (double.parse(val) * 100).toInt();
+//                 } catch (e) {}
+//               },
+//             ),
+//             const SizedBox(height: 20),
+//             ElevatedButton(
+//               onPressed: () async {
+//                 setState(() {
+//                   _message = '';
+//                 });
 
-class _MyPostState extends State<MyPost> {
-  late Future<List<Post>> futurePost;
+//                 final charge = Charge()
+//                   ..email = _email
+//                   ..amount = _amount
+//                   ..reference = 'ref_${DateTime.now().millisecondsSinceEpoch}';
+//                 final res =
+//                     await PaystackClient.checkout(context, charge: charge);
 
-  @override
-  void initState() {
-    super.initState();
-    futurePost = fetchPost();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Fetch Data Example',
-      theme: ThemeData(
-        primaryColor: Colors.lightBlueAccent,
-      ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Fetch Data Example'),
-        ),
-        body: FutureBuilder<List<Post>>(
-          future: futurePost,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return ListView.builder(
-                itemCount: snapshot.data!.length,
-                itemBuilder: (_, index) => Container(
-                  child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    padding: EdgeInsets.all(20.0),
-                    decoration: BoxDecoration(
-                      color: Color(0xff97FFFF),
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "${snapshot.data![index].title}",
-                          style: TextStyle(
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(height: 10),
-                        Text("${snapshot.data![index].body}"),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            } else {
-              return Center(child: CircularProgressIndicator());
-            }
-          },
-        ),
-      ),
-    );
-  }
-}
+//                 if (res.status) {
+//                   _message = 'Charge was successful. Ref: ${res.reference}';
+//                 } else {
+//                   _message = 'Failed: ${res.message}';
+//                 }
+//                 setState(() {});
+//               },
+//               child: Text('Checkout'),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }

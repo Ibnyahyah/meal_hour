@@ -8,27 +8,22 @@ class MenuDrawer extends StatelessWidget {
     {
       'icon': Icons.shopping_cart,
       'text': 'Cart',
-      'route': './carts_screen',
+      'route': '/carts_screen',
     },
     {
       'icon': Icons.shopping_bag,
       'text': 'Orders',
-      'route': './order__history',
-    },
-    {
-      'icon': Icons.list_alt,
-      'text': 'History',
-      'route': './test_screen',
+      'route': '/order__history',
     },
     {
       'icon': Icons.star,
       'text': 'Favorite',
-      'route': './favorites__screen',
+      'route': '/favorites__screen',
     },
     {
       'icon': Icons.info_outline,
       'text': 'About',
-      'route': './about__247chops',
+      'route': '/about__247chops',
     },
   ];
 

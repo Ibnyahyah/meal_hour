@@ -4,18 +4,18 @@ class CartItem extends StatelessWidget {
   final String imageUrl;
   final String title;
   final double price;
-  final Function increasement;
-  final Function decreasement;
+  final Function increment;
+  final Function decrement;
   final double id;
   final num qty;
 
-  const CartItem(this.imageUrl, this.title, this.price, this.increasement,
-      this.decreasement, this.id, this.qty,
+  const CartItem(this.imageUrl, this.title, this.price, this.increment,
+      this.decrement, this.id, this.qty,
       {Key? key})
       : super(key: key);
 
   void selectedMeal(BuildContext context) {
-    Navigator.of(context).pushNamed('./meal_details', arguments: id);
+    Navigator.of(context).pushNamed('/meal_details', arguments: id);
   }
 
   @override
@@ -74,7 +74,7 @@ class CartItem extends StatelessWidget {
                     child: Row(
                       children: [
                         IconButton(
-                          onPressed: () => decreasement(),
+                          onPressed: () => decrement(id),
                           icon: const Icon(Icons.remove),
                         ),
                         Container(
@@ -90,7 +90,7 @@ class CartItem extends StatelessWidget {
                           ),
                         ),
                         IconButton(
-                          onPressed: () => increasement(id),
+                          onPressed: () => increment(id),
                           icon: const Icon(Icons.add),
                         ),
                       ],
